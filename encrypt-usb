@@ -1,0 +1,39 @@
+List info about all or the specified block devices:
+lsblk
+
+To overwrite random data by 1s & 0s several times on the USB Drive:
+sudo shred -v -n 1 /dev/{your_usb}
+
+Install cryptsetup (Ubuntu has it installed by default):
+sudo apt-get install cryptsetup
+
+Set up a dm-crypt device in LUKS encryption mode and enter your secure passphrase:
+sudo cryptsetup luksFormat /dev/sdb
+
+Open device and setup mapping with name provided (e.g. usb_d in this example):
+sudo cryptsetup luksOpen /dev/sdb usb_d
+
+Verify the new virtual block device mapper:
+ls -arlt /dev/mapper | tail
+
+Run ext4 filesystem directly on that device:
+sudo mkfs -t ext4 /dev/mapper/USBDrive
+
+Mount the device your filesystem:
+sudo mount /dev/mapper/USBDrive /USBDrive
+
+Verify the the mapper is properly mounted using the df command:
+df -h /USBDrive/
+
+Encryption Works!
+
+
+On every reboot to mount and unmount a drive:
+
+Mounting:
+sudo cryptsetup luksOpen /dev/sdb usb_d
+sudo mount /dev/mapper/USBDrive /USBDrive
+
+Unmounting:
+sudo umount /USBDrive
+sudo cryptsetup luksClose USBDrive
