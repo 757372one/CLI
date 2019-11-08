@@ -1,0 +1,10 @@
+All raspberry devices MAC addresses startvwith B8:27:EB.
+So, on *nix systems:
+sudo nmap -sP 192.168.1.0/24 | awk '/^Nmap/{ip=$NF}/B8:27:EB/{print ip}'
+where 192.168.1.* will be your local network mask.
+
+If you are on a Mac system you can use Homebrew to install nmap:
+brew install nmap
+
+On Windows, you might use Wireshark and use the following display filter:
+eth.addr[0:3] == B8:27:EB
